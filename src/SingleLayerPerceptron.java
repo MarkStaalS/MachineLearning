@@ -1,10 +1,11 @@
+package src;
 import java.util.Arrays;
 import java.util.Random;
 
-public class SingleLayerPerceptrons {
+public class SingleLayerPerceptron {
 	public static void main(String[] args) {
 		//epoch
-		int epoch = 50;
+		int epoch = 500;
 		//input
 		double[] x= {0,1,0,1};
 		//target
@@ -18,27 +19,25 @@ public class SingleLayerPerceptrons {
 			w[i] = rnd.nextDouble();
 		}
 		//linear combination of input values z
-		double z = 0; 
+		double z = 0;
 		//g(z) = g
-		double g;
+		double g =0;
 		for(int j =0; j<epoch;j++) {
 			for(int i=0; i< x.length;i++) {
 				z= z +x[i]*w[i];
 			}
 			//activation function
+			//if statement skal være en range istedet for en precis værdi
 			if(z>=0) {
 				g= 1;
-				if(g==target) {
-					epoch = j;
-					break;
-				}
+				//g=z
+
+			} else {
+				g=-1;		
 			}
-			else {
-				g=-1;
-				if(g==target) {
-					epoch = j;
-					break;
-				}
+			if(g==target) {
+				epoch = j;
+				break;
 			}
 			System.out.println(g);
 			double delta_w=0;
@@ -47,21 +46,25 @@ public class SingleLayerPerceptrons {
 				delta_w = n*(target-g)*x[i];
 				w[i] = w[i] + delta_w;
 			}
-			
+
 			System.out.println(Arrays.toString(w));
 		}
-		//last guess without tar
+		
+		/*
+		//last guess without target
 		for(int i=0; i< x.length;i++) {
 			z= z +x[i]*w[i];
 		}
 		//activation function
 		if(z>=0) {
-			g= 1;
+			g= z;
 		}
 		else {
-			g=-1;
+			g=0;
 		}
+		*/
 		System.out.println("target "+ target + " guess " +g+ " epoch " + epoch);
 		System.out.println(Arrays.toString(w));
+		
 	}
 }

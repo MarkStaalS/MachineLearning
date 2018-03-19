@@ -2,7 +2,7 @@ package src;
 
 import java.util.HashMap;
 
-public class neuron {
+public class neuron_output {
 	double g;
 	int index;
 	double bias;
@@ -11,7 +11,7 @@ public class neuron {
 	//Array of connections
 	HashMap<Integer, connection> connections = new HashMap<Integer, connection>();
 	
-	public neuron(double _bias) {
+	public neuron_output(double _bias) {
 		bias = _bias;
 		index = 0;
 		z = 0;

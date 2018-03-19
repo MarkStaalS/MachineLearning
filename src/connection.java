@@ -3,10 +3,9 @@ package src;
 public class connection {
 	double w;
 	double x;
-	double z_c;
+	double z;
 	double n;
 	double delta_w;
-	double target;
 	//Constructs connection
 	public connection() {
 	}
@@ -22,19 +21,14 @@ public class connection {
 	public void set_n(double set_n) {
 		n = set_n;
 	}
-	// target value
-	public void target(double set_target) {
-		target = set_target;
-	}
 	//calculates output
 	public double getOutput() {
-		z_c = w*x;
-		return z_c;
+		z = w * x;
+		return z;
 	}
 	//updates the weight
-	public double update_w() {
-		double delta_w = n*(target-z_c)*x;
+	public void update_w(double delta) {
+		double delta_w = n*delta*z;
 		w = w - delta_w;
-		return w;
 	}
 }

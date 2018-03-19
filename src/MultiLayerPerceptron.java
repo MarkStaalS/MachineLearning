@@ -10,10 +10,10 @@ public class MultiLayerPerceptron {
 		connection c2 = new connection();
 		connection c3 = new connection();
 		
-		c0.int_w(0.2);
-		c1.int_w(0.2);
-		c2.int_w(0.2);
-		c3.int_w(0.2);
+		c0.set_w(0.2);
+		c1.set_w(0.2);
+		c2.set_w(0.2);
+		c3.set_w(0.2);
 		
 		c0.setInput(1);
 		c1.setInput(1);

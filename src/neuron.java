@@ -25,7 +25,7 @@ public class neuron {
 		return g;
 	}
 	public double calcOut() {
-		//summes the inputs
+		//summes the inputs and gives z
 		int len = connections.size();
 		for(int i =0 ; i<len;i++) {
 			z += connections.get(i).getOutput();			
@@ -33,6 +33,7 @@ public class neuron {
 		return z;
 	}
 	public void addConnection(connection c) {
+		//add a connection at index
 		connections.put(index, c);
 		index += 1;
 	}

@@ -2,11 +2,15 @@ package src;
 
 import java.util.HashMap;
 
+import org.omg.CORBA.PUBLIC_MEMBER;
+
 public class neuron_output {
 	double g;
 	int index;
 	double bias;
 	double z;
+	//
+	static double delta;
 	
 	//Array of connections
 	HashMap<Integer, connection> connections = new HashMap<Integer, connection>();
@@ -44,8 +48,9 @@ public class neuron_output {
 	public void update_w(double target, double y) {
 		//loops through connections
 		for (int i = 0; i < connections.size(); i++) {
-			double delta = target - y * connections.get(i).x;
-			connections.get(i).update_w(delta);
+			delta = (target - y) * connections.get(i).x;
+			connections.get(i).setDelta(delta);
+			connections.get(i).update_w();
 		}
 	}
 }

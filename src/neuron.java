@@ -4,16 +4,16 @@ import java.util.HashMap;
 
 public class neuron {
 	double g;
-	int index;
-	double bias;
 	double z;
+	double bias;
 	
 	//Array of connections
-	HashMap<Integer, connection> connections = new HashMap<Integer, connection>();
+	HashMap<Integer, connection> inputConnections = new HashMap<Integer, connection>();
+	HashMap<Integer, connection> outputConnections = new HashMap<Integer, connection>();
+	
 	
 	public neuron(double _bias) {
 		bias = _bias;
-		index = 0;
 		z = 0;
 	}
 	
@@ -27,25 +27,32 @@ public class neuron {
 		return g;
 	}
 	
-	public double calcOut() {
+	public void calcOut() {
 		//sum of the inputs and gives z
-		for (int i = 0; i < connections.size(); i++) {
-			z += connections.get(i).getOutput();			
-		}
-		return this.activationFunc(z) + bias;
+		for (int i = 0; i < inputConnections.size(); i++)
+			z += inputConnections.get(i).getOutput();
+		//loops through outputs and sets their input as calcOut
+		double out = this.activationFunc(z) + bias;
+		for (int i = 0; i < outputConnections.size(); i++)
+			outputConnections.get(i).setInput(out);
 	}
 	
-	public void addConnection(connection c) {
+	public void addInputConnection(connection c) {
 		//add a connection at index
-		connections.put(index, c);
-		index += 1;
+		inputConnections.put(inputConnections.size(), c);
 	}
 	
-	public void update_w(double target, double y) {
+	public void addOutputConnection(connection c) {
+		//add a connection at index
+		outputConnections.put(outputConnections.size(), c);
+	}
+	
+	public void update_w() {
 		//loops through connections
-		for (int i = 0; i < connections.size(); i++) {
-			double delta = target - y * connections.get(i).x;
-			connections.get(i).update_w(delta);
+		for (int i = 0; i < inputConnections.size(); i++) {
+			double delta = inputConnections.get(i).w * outputConnections.get(0).delta * inputConnections.get(i).x;
+			inputConnections.get(i).setDelta(delta);
+			inputConnections.get(i).update_w();
 		}
 	}
 }

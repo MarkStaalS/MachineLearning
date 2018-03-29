@@ -1,67 +1,91 @@
 package src;
 
-
 public class main {
 	public static void main(String[] args) {
-
+		//mangler test se excel ark
+		
 		//input layer
 		neuron_input in0 = new neuron_input();
 		neuron_input in1 = new neuron_input();
 		neuron_input in2 = new neuron_input();
 		neuron_input in3 = new neuron_input();
 		neuron_input[] inputs = {in0, in1, in2, in3};
-		inputs[0].setInput(1);
-		inputs[1].setInput(1);
-		inputs[2].setInput(1);
-		inputs[3].setInput(1);
 		
 		//1st hiddenlayer
-		neuron n1 = new neuron(0);	
-		neuron n2 = new neuron(0);
-		neuron[] hl1 = {n1,n2};
+		neuron n0_1 = new neuron(0);	
+		neuron[] hl1 = {n0_1};
+		
+		//connect input to hidden layer 1
+		connection c00_1 = new connection(0.2, 0.2);
+		connection c10_1 = new connection(0.2, 0.2);
+		connection c20_1 = new connection(0.2, 0.2);
+		connection c30_1 = new connection(0.2, 0.2);
+		
+		//connection hiddenlayer 1 to 2
+		connection c00_2 = new connection(0.3, 0.2);
+
+		//add hiddenalyer 1 connections
+		n0_1.addInputConnection(c00_1);
+		n0_1.addInputConnection(c10_1);
+		n0_1.addInputConnection(c20_1);
+		n0_1.addInputConnection(c30_1);
+		n0_1.addOutputConnection(c00_2);
+		//end of 1st layer
+		
+		//2nd layer
+		neuron n0_2 = new neuron(0);
+		neuron[] hl2 = {n0_2};
+		
+		//connection hiddenlayer 2 to output layer
+		connection c00_3 = new connection(0.4, 0.2);
+		
+		//add hiddenalyer 2 connections
+		n0_2.addInputConnection(c00_2);
+		n0_2.addOutputConnection(c00_3);
 		
 		//output layer
 		neuron_output on = new neuron_output(0);
 		neuron_output[] outputs = {on};
+		on.addConnection(c00_3);
+		//Here we have our full network
 		
-		connection c0 = new connection();
-		connection c1 = new connection();
-		connection c2 = new connection();
-		connection c3 = new connection();
+		//Feedforward
+		//input layer
+		inputs[0].setInput(1);
+		inputs[1].setInput(2);
+		inputs[2].setInput(2);
+		inputs[3].setInput(1);
+		c00_1.setInput(in0.getOutput());
+		c10_1.setInput(in1.getOutput());
+		c20_1.setInput(in2.getOutput());
+		c30_1.setInput(in3.getOutput());
+		//hiddenlayers
+		hl1[0].calcOut();
+		hl2[0].calcOut();
+		//output layer
+		double output = outputs[0].calcOut();
+		System.out.println(output);
+		//traning (backpropagation)
+		outputs[0].update_w(1, output);
+		hl2[0].update_w();
+		hl1[0].update_w();
 		
-		c0.set_w(0.2);
-		c1.set_w(0.2);
-		c2.set_w(0.2);
-		c3.set_w(0.2);
 		
-		
-		//target kan gøres smartere
-		c0.set_n(0.2);
-		c1.set_n(0.2);
-		c2.set_n(0.2);
-		c3.set_n(0.2);
-		
-		
-		
-		connection c21 = new connection();
-		c21.set_w(0.2);
-		c21.set_n(0.2);
-		
-		n1.addConnection(c0);
-		n1.addConnection(c1);
-		n1.addConnection(c2);
-		n1.addConnection(c3);
-		
-		n2.addConnection(c21);
-		
-		//for loop, kør det igennem
-		for(int i=0; i<10;i ++) {
-			n1.calcOut();
-			c21.setInput(n1.calcOut());
-			double output = n2.calcOut();
-		}
-		//update
-		
+		//Feedforward
+		//input layer
+		inputs[0].setInput(1);
+		inputs[1].setInput(2);
+		inputs[2].setInput(2);
+		inputs[3].setInput(1);
+		c00_1.setInput(in0.getOutput());
+		c10_1.setInput(in1.getOutput());
+		c20_1.setInput(in2.getOutput());
+		c30_1.setInput(in3.getOutput());
+		//hiddenlayers
+		hl1[0].calcOut();
+		hl2[0].calcOut();
+		//output layer
+		output = outputs[0].calcOut();
+		System.out.println(output);
 	}
-
 }

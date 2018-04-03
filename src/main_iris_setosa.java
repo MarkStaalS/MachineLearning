@@ -38,8 +38,9 @@ public class main_iris_setosa {
 		 * batch size and implementation
 		 * Division of data
 		 * Final control
+		 * Needs clean up
 		*/
-		double n = 0.01;
+		double n = 0.2;
 		//input layer
 		neuron_input in0 = new neuron_input();
 		neuron_input in1 = new neuron_input();
@@ -55,7 +56,7 @@ public class main_iris_setosa {
 		neuron[] hl1 = {n0_1, n1_1, n2_1, n3_1};
 		
 		Random r = new Random();
-		double rangeMin = 0;
+		double rangeMin = -1;
 		double rangeMax = 1;
 		
 		
@@ -79,7 +80,7 @@ public class main_iris_setosa {
 		connection c12_1 = new connection(rangeMin + (rangeMax - rangeMin) * r.nextDouble(), n);
 		connection c13_1 = new connection(rangeMin + (rangeMax - rangeMin) * r.nextDouble(), n);
 		connection c14_1 = new connection(rangeMin + (rangeMax - rangeMin) * r.nextDouble(), n);
-		connection c15_1 = new connection(rangeMin + (rangeMax - rangeMin) * r.nextDouble(), n);
+		connection c15_1 = new connection(rangeMin + (rangeMax - rangeMin) * r.nextDouble(), n);		
 		
 		//connection hiddenlayer 1 to 2, output connections
 		//n0_1
@@ -242,11 +243,11 @@ public class main_iris_setosa {
 		
 		
 		/*
-		 * Full network needs to be controled
+		 * Full network needs to be optimized
 		 */
 
 		//Our traning set has 150 lines of data
-		int epoch_max = 5;
+		int epoch_max = 10;
 		//Read data
 		//Loads txt file
 		File file = new File("C:\\Users\\mark\\Desktop\\iris.data.txt");
@@ -259,7 +260,6 @@ public class main_iris_setosa {
 		}
 		String [] test = new String[3];
 		int i = 0;
-		double target = 0;
 		String [] y = new String[4];
 		int teller_output = 0;
 		
@@ -268,93 +268,122 @@ public class main_iris_setosa {
 			 * Segmentation of data
 			 * 0-49   = Setosa
 			 * 50-99  = Versicolor
-			 * 10-149 = Virginica
-			 * Ammount of test data
-			 * Missing normalizationg and perhaps scrambling and augmentation
+			 * 100-149 = Virginica
+			 * Amount of test data
+			 * Missing normalizating and perhaps scrambling and augmentation
 			 */
-			if (epoch == 49 || epoch == 99 || epoch == 149) {
-				test[i] = (String) listOfSt.get(epoch);
-				i++;
-			} else {
-				//get string of data
-				String x; 
-				x = (String) listOfSt.get(epoch);
-				//split string
-				y = x.split(",");
-				
-				for ( int j = 0; j < 4; j++) {
-					//convert from string to double
-					double conv_double = Double.parseDouble(y[j]);
-					//set input from 0 to 3 (0,1,2,3)
-					inputs[j].setInput(conv_double);
-				}
-				
-				//set target
-				if (x.contains("Iris-setosa")) {
-					target = 0;
-				} 
-				else if (x.contains("Iris-versicolor")) {
-					target = 1;
-				} 
-				else if (x.contains("Iris-virginica")) {
-					target = 2;
-				}
-				
-				//feeding input from input layer to 1st set of connections
-				c0_1.setInput(in0.getOutput());
-				c1_1.setInput(in1.getOutput());
-				c2_1.setInput(in2.getOutput());
-				c3_1.setInput(in3.getOutput());
-				c4_1.setInput(in0.getOutput());
-				c5_1.setInput(in1.getOutput());
-				c6_1.setInput(in2.getOutput());
-				c7_1.setInput(in3.getOutput());
-				c8_1.setInput(in0.getOutput());
-				c9_1.setInput(in1.getOutput());
-				c10_1.setInput(in2.getOutput());
-				c11_1.setInput(in3.getOutput());
-				c12_1.setInput(in0.getOutput());
-				c13_1.setInput(in1.getOutput());
-				c14_1.setInput(in2.getOutput());
-				c15_1.setInput(in3.getOutput());
-				//checking flower and setting target
+			
+			//get string of data
+			String x; 
+			x = (String) listOfSt.get(epoch);
+			//split string
+			y = x.split(",");
+			
+			for ( int j = 0; j < 4; j++) {
+				//convert from string to double
+				double conv_double = Double.parseDouble(y[j]);
+				//set input from 0 to 3 (0,1,2,3)
+				inputs[j].setInput(conv_double);
+			}
 
-				//hiddenlayers
-				hl1[0].calcOut();
-				hl1[1].calcOut();
-				hl1[2].calcOut();
-				hl1[3].calcOut();
-				
-				hl2[0].calcOut();
-				hl2[1].calcOut();
-				hl2[2].calcOut();
-				hl2[3].calcOut();
-				//output layer
-				//double output = outputs[0].calcOut();
-				
-				/*
-				if (epoch % 10 == 0 && epoch > 1) {
-					//traning (backpropagation), every 10th epoch
-					outputs[0].update_w(target, output);
-					hl2[0].update_w();
-					hl1[0].update_w();	
-					System.out.print("update " + epoch + " ");
-				}
-				*/
-				System.out.println("Target" + "\t on_0" + "\t on_1" + "\t on_2" );
-				System.out.print(target + "\t" + outputs[0].calcOut());
-				System.out.print("\t" + outputs[1].calcOut());
-				System.out.println("\t" + outputs[2].calcOut());
-				
-				/*Online traning, fejl
+			//feeding input from input layer to 1st set of connections
+			
+			c0_1.setInput(in0.getOutput());
+			c1_1.setInput(in1.getOutput());
+			c2_1.setInput(in2.getOutput());
+			c3_1.setInput(in3.getOutput());
+			c4_1.setInput(in0.getOutput());
+			c5_1.setInput(in1.getOutput());
+			c6_1.setInput(in2.getOutput());
+			c7_1.setInput(in3.getOutput());
+			c8_1.setInput(in0.getOutput());
+			c9_1.setInput(in1.getOutput());
+			c10_1.setInput(in2.getOutput());
+			c11_1.setInput(in3.getOutput());
+			c12_1.setInput(in0.getOutput());
+			c13_1.setInput(in1.getOutput());
+			c14_1.setInput(in2.getOutput());
+			c15_1.setInput(in3.getOutput());
+			//checking flower and setting target
+			
+			/*
+			c0_1.setInput(1);
+			c1_1.setInput(1);
+			c2_1.setInput(1);
+			c3_1.setInput(1);
+			c4_1.setInput(1);
+			c5_1.setInput(1);
+			c6_1.setInput(1);
+			c7_1.setInput(1);
+			c8_1.setInput(1);
+			c9_1.setInput(1);
+			c10_1.setInput(1);
+			c11_1.setInput(1);
+			c12_1.setInput(1);
+			c13_1.setInput(1);
+			c14_1.setInput(1);
+			c15_1.setInput(1);
+			*/
+			//hiddenlayers
+			for (int ctr = 0; ctr < hl1.length; ctr++) {
+				hl1[ctr].calcOut();
+			}
+			for (int ctr = 0; ctr < hl2.length; ctr++) {
+				hl2[ctr].calcOut();
+			}
+			
+			//set target and update weights
+			if (x.contains("Iris-setosa")) {
+				outputs[0].update_w(1, outputs[0].calcOut());
+				outputs[1].update_w(0, outputs[1].calcOut());
+				outputs[2].update_w(0, outputs[2].calcOut());
+			} 
+			else if (x.contains("Iris-versicolor")) {
+				outputs[0].update_w(0, outputs[0].calcOut());
+				outputs[1].update_w(1, outputs[1].calcOut());
+				outputs[2].update_w(0, outputs[2].calcOut());
+			} 
+			else if (x.contains("Iris-virginica")) {
+				outputs[0].update_w(0, outputs[0].calcOut());
+				outputs[1].update_w(0, outputs[1].calcOut());
+				outputs[2].update_w(1, outputs[2].calcOut());
+			}
+			
+			//output layer
+			//double output = outputs[0].calcOut();
+			
+			/*batch size 5
+			if (epoch % 5 == 0 && epoch ) {
+				//traning (backpropagation), every 10th epoch
 				outputs[0].update_w(target, output);
 				hl2[0].update_w();
 				hl1[0].update_w();	
-				*/
-				
-				
-				
+				System.out.print("update " + epoch + " ");
 			}
+			*/
+			/*Print
+			 * Target for: on_ 0 , on_1 , on_2
+			 * Output for: on_ 0 , on_1 , on_2
+			 * We have a seperate target for each output 0 or 1
+			 */
+			System.out.println("\t on_0" + "\t on_1" + "\t on_2" );
+			System.out.print("\t" + outputs[0].calcOut());
+			System.out.print("\t" + outputs[1].calcOut());
+			System.out.println("\t" + outputs[2].calcOut());
+			
+			/*Online traning, fejl
+			 * Remember! target should be set based on output neuron e.g [0 0 1] 
+			outputs[0].update_w(target, output);
+			hl2[0].update_w();
+			hl1[0].update_w();	
+			*/
+			
+			/*soft max layer
+			 * create class, soft max
+			 * output neurons as inputs
+			 * outputs procentage value for each, sum = 1
+			 */
+			
 		}	
 		
 		/*

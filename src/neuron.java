@@ -28,6 +28,7 @@ public class neuron {
 	}
 	
 	public void calcOut() {
+		z = 0;
 		//sum of the inputs and gives z
 		for (int i = 0; i < inputConnections.size(); i++)
 			z += inputConnections.get(i).getOutput();

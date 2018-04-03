@@ -32,6 +32,7 @@ public class neuron_output {
 	}
 	
 	public double calcOut() {
+		z = 0;
 		//sum of the inputs and gives z
 		for (int i = 0; i < connections.size(); i++) {
 			z += connections.get(i).getOutput();			

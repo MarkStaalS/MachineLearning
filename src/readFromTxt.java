@@ -15,14 +15,20 @@ public class readFromTxt {
 		while ((st = br.readLine()) != null) {
 			listOfSt.add(st);
 		}
+		
 		//Gets specific string
-		System.out.println(listOfSt.get(149));
+		System.out.println(listOfSt.get(50));
 		String x; 
-		x = (String) listOfSt.get(149);
+		x = (String) listOfSt.get(50);
 		System.out.println(x.indexOf(","));
 		//Delimits string based on ",", this gives us a String[] contaning the differen values
 		String[] y = x.split(",");
 		System.out.println(Arrays.toString(y));
 		System.out.println(y[3]);
+		
+		//identify flower
+		if (x.contains("Iris-setosa")) {
+			System.out.println("versi");
+		}
 	}
 }

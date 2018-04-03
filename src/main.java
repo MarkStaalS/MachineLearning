@@ -2,7 +2,6 @@ package src;
 
 public class main {
 	public static void main(String[] args) {
-		//mangler test se excel ark
 		
 		//input layer
 		neuron_input in0 = new neuron_input();
@@ -14,15 +13,15 @@ public class main {
 		//1st hiddenlayer
 		neuron n0_1 = new neuron(0);	
 		neuron[] hl1 = {n0_1};
-		
+
 		//connect input to hidden layer 1
-		connection c00_1 = new connection(0.2, 0.2);
-		connection c10_1 = new connection(0.2, 0.2);
-		connection c20_1 = new connection(0.2, 0.2);
-		connection c30_1 = new connection(0.2, 0.2);
+		connection c00_1 = new connection(Math.random(), 0.02);
+		connection c10_1 = new connection(Math.random(), 0.02);
+		connection c20_1 = new connection(Math.random(), 0.02);
+		connection c30_1 = new connection(Math.random(), 0.02);
 		
 		//connection hiddenlayer 1 to 2
-		connection c00_2 = new connection(0.3, 0.2);
+		connection c00_2 = new connection(Math.random(), 0.02);
 
 		//add hiddenalyer 1 connections
 		n0_1.addInputConnection(c00_1);
@@ -37,7 +36,7 @@ public class main {
 		neuron[] hl2 = {n0_2};
 		
 		//connection hiddenlayer 2 to output layer
-		connection c00_3 = new connection(0.4, 0.2);
+		connection c00_3 = new connection(Math.random(), 0.02);
 		
 		//add hiddenalyer 2 connections
 		n0_2.addInputConnection(c00_2);
@@ -52,8 +51,8 @@ public class main {
 		//Feedforward
 		//input layer
 		inputs[0].setInput(1);
-		inputs[1].setInput(2);
-		inputs[2].setInput(2);
+		inputs[1].setInput(1);
+		inputs[2].setInput(1);
 		inputs[3].setInput(1);
 		c00_1.setInput(in0.getOutput());
 		c10_1.setInput(in1.getOutput());
@@ -70,12 +69,11 @@ public class main {
 		hl2[0].update_w();
 		hl1[0].update_w();
 		
-		
 		//Feedforward
 		//input layer
 		inputs[0].setInput(1);
-		inputs[1].setInput(2);
-		inputs[2].setInput(2);
+		inputs[1].setInput(1);
+		inputs[2].setInput(1);
 		inputs[3].setInput(1);
 		c00_1.setInput(in0.getOutput());
 		c10_1.setInput(in1.getOutput());
@@ -86,6 +84,12 @@ public class main {
 		hl2[0].calcOut();
 		//output layer
 		output = outputs[0].calcOut();
-		System.out.println(output);
+		System.out.println("out: " + output);
+		
+		/*Mangler:
+		 * træning
+		 * save og load af vægte
+		 * udtræk af data
+		 */
 	}
 }

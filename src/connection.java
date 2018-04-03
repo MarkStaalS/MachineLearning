@@ -1,5 +1,9 @@
 package src;
 
+import java.io.FileNotFoundException;
+import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
+
 public class connection {
 	double w;
 	double x;

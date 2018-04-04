@@ -46,18 +46,59 @@ public class main_iris_setosa {
 		neuron_input in1 = new neuron_input();
 		neuron_input in2 = new neuron_input();
 		neuron_input in3 = new neuron_input();
-		neuron_input[] inputs = {in0, in1, in2, in3};
+		//neuron_input[] inputs = {in0, in1, in2, in3};
+		
+		/*
+		 *  creates input layer
+		 */
+		int input_size = 4;
+		neuron_input[] inputs = new neuron_input[input_size];
+		for (int i = 0; i < input_size; i++) {
+			inputs[i] = new neuron_input();
+		}
+		/*
+		 * creates hidden layer 1
+		 */
+		int hl1_size = 4;
+		neuron[] hl1 = new neuron[hl1_size];
+		for (int i = 0; i < hl1_size; i++) {
+			hl1[i] = new neuron(0);
+		}
+		/*
+		 * creates 2nd hidden layer
+		 */
+		int hl2_size = 4;
+		neuron[] hl2 = new neuron[hl2_size];
+		for (int i = 0; i < hl2_size; i++) {
+			hl2[i] = new neuron(0);
+		}
+		/*
+		 * creats output layer
+		 */
+		int out_size = 3;
+		neuron_output[] outputs = new neuron_output[out_size];
+		for (int i = 0; i < out_size; i++) {
+			outputs[i] = new neuron_output(0);
+		}
+		/*
+		 * establish connections: intput to hl1
+		 * create and connect
+		 */
+		Random r = new Random();
+		double rangeMin = -1;
+		double rangeMax = 1;
+		for ( int i = 0; i < inputs.length; i++) {
+			
+		}
+
 		
 		//1st hiddenlayer
 		neuron n0_1 = new neuron(0);
 		neuron n1_1 = new neuron(0);	
 		neuron n2_1 = new neuron(0);	
 		neuron n3_1 = new neuron(0);	
-		neuron[] hl1 = {n0_1, n1_1, n2_1, n3_1};
+		//neuron[] hl1 = {n0_1, n1_1, n2_1, n3_1};
 		
-		Random r = new Random();
-		double rangeMin = -1;
-		double rangeMax = 1;
 		
 		
 		//connect input to hidden layer 1
@@ -223,7 +264,7 @@ public class main_iris_setosa {
 		neuron_output on_0 = new neuron_output(0);
 		neuron_output on_1 = new neuron_output(0);
 		neuron_output on_2 = new neuron_output(0);
-		neuron_output[] outputs = {on_0, on_1, on_2};
+		//neuron_output[] outputs = {on_0, on_1, on_2};
 		//on_0
 		on_0.addConnection(c0_3);
 		on_0.addConnection(c4_3);
@@ -247,7 +288,7 @@ public class main_iris_setosa {
 		 */
 
 		//Our traning set has 150 lines of data
-		int epoch_max = 10;
+		int epoch_max = 20;
 		//Read data
 		//Loads txt file
 		File file = new File("C:\\Users\\mark\\Desktop\\iris.data.txt");

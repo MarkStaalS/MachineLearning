@@ -23,13 +23,13 @@ public class test {
 		//z = result
 		double z[] = new double[len];
 
-		test.intW(w,len,hln);
-		test.intZ(len,z);
 		//test.traning(w, x, len, epoch, hln, target, dataLen, z, n);
 		int i = 0;
 		double g = 0;
 		int j = 0;
 		int row = 0;
+		System.out.println(Math.exp(5));
+		/*
 		test.calcOutput(w, x, len, hln, z, i, j);
 		g = test.actFunc(j, z, g);
 		System.out.println(" + bias = "+ (g + _bias) );
@@ -114,7 +114,6 @@ public class test {
 			}
 		}
 		return Arrays.copyOf(w, len);
+		*/
 	}
-	*/
-	
 }

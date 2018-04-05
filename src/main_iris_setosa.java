@@ -19,11 +19,7 @@ public class main_iris_setosa {
 		 * 1: Iris versicolor
 		 * 2: Iris virginica
 		 * 
-		 * We have 4 inputs:
-		 * SepalLength
-		 * SepalWidth
-		 * PetalLength
-		 * PetalWidth
+		 * We have 4 inputs: SepalLength, SepalWidth, PetalLength, PetalWidth
 		 * 
 		 * PrintWriter writer = new PrintWriter("C:\\Users\\mark\\Desktop\\w.txt", "UTF-8");
 		 * writer.println(c0.w);
@@ -35,8 +31,7 @@ public class main_iris_setosa {
 		 * batch size and implementation
 		 * Division of data
 		 * Final control
-		 * Posible layers as objects
-		*/
+		 */
 		
 		/*
 		 * learning rate
@@ -50,70 +45,18 @@ public class main_iris_setosa {
 		neuron[] hl2 = createHiddenLayer(4);
 		neuron_output[] outputs = createOutputLayer(3);
 		/*
-		 * establish connections: intput to hl1
-		 * create and connect
+		 * establish connections:
 		 */
 		Random r = new Random();
 		double rangeMin = -1;
 		double rangeMax = 1;
-		
 		int cnt = 0;
+
+		connection[] c_1 = connectionsInputToFirstHiddenLayer(r, inputs, hl1, rangeMin, rangeMax, n);
+		connection[] c_2 = connectionsHiddenLayer(r, hl1, hl2, rangeMin, rangeMax, n);
+		connection[] c_3 = connectionsHiddenLayerToOutput(r, hl2, outputs, rangeMin, rangeMax, n);
 		/*
-		 * create input connections for hl1
-		 */
-		connection[] c_1 = new connection[inputs.length * hl1.length];
-		for ( int i = 0; i < inputs.length; i++) {
-			for ( int j = 0; j < hl1.length; j++) {
-				/*
-				 * create connection
-				 */
-				c_1[cnt] = new connection(rangeMin + (rangeMax - rangeMin) * r.nextDouble(), n);
-				/*
-				 * add input conection "j" to neuron "i", ammount of connections pr neuron = amount of neurons in previous layer
-				 */
-				hl1[i].addInputConnection(c_1[cnt]);
-				cnt ++;
-			}
-		}
-		/*
-		 * create input connections for hl2
-		 */	
-		cnt = 0;
-		connection[] c_2 = new connection[hl1.length * hl2.length];
-		for ( int i = 0; i < hl1.length; i++) {
-			for ( int j = 0; j < hl2.length; j++) {
-				/*
-				 * create connection
-				 */
-				c_2[cnt] = new connection(rangeMin + (rangeMax - rangeMin) * r.nextDouble(), n);
-				/*
-				 * add input conection "j" to neuron "i", ammount of connections pr neuron = amount of neurons in previous layer
-				 */
-				hl2[i].addInputConnection(c_2[cnt]);
-			}
-			cnt ++;
-		}
-		/*
-		 * create input connections for output layer
-		 */	
-		cnt = 0;
-		connection[] c_3 = new connection[hl2.length * outputs.length];
-		for ( int i = 0; i < outputs.length; i++) {
-			for ( int j = 0; j < hl2.length; j++) {
-				/*
-				 * create connection
-				 */
-				c_3[cnt] = new connection(rangeMin + (rangeMax - rangeMin) * r.nextDouble(), n);
-				/*
-				 * add input conection "j" to neuron "i", ammount of connections pr neuron = amount of neurons in previous layer
-				 */
-				outputs[i].addConnection(c_3[cnt]);
-			}
-			cnt ++;
-		}
-		
-		/*
-		 * create output connections for hl1
+		 * set output connections for hl1
 		 */
 		cnt = 0;
 		for ( int i = 0; i < hl1.length; i++) {
@@ -126,7 +69,7 @@ public class main_iris_setosa {
 			cnt ++;
 		}
 		/*
-		 * create output connections for hl2
+		 * set output connections for hl2
 		 */
 		cnt = 0;
 		for ( int i = 0; i < outputs.length; i++) {
@@ -142,22 +85,31 @@ public class main_iris_setosa {
 		 * Here we have our full network
 		 */
 	
-		//Our traning set has 150 lines of data
-		int epoch_max = 2;
-		//Read data
-		//Loads txt file
+		/*
+		 * Our traning set has 150 lines of data
+		 */
+		int epoch_max = 50;
+		/*
+		 * Read data
+		 *Loads txt file
+		 */
 		File file = new File("C:\\Users\\mark\\Desktop\\iris.data.txt");
 		BufferedReader br = new BufferedReader(new FileReader(file));
 		ArrayList listOfSt = new ArrayList();
-		//Transforms file to list of strings
+		/*
+		 * Transforms file to list of strings
+		 */
 		String st;
 		while ((st = br.readLine()) != null) {
 			listOfSt.add(st);
 		}
-		String [] test = new String[3];
-		int i = 0;
 		String [] y = new String[4];
-		int teller_output = 0;
+		
+		int batch_size = 5;
+		double[][] e_out = new double[batch_size][outputs.length];
+		double[] error = new double[outputs.length];
+		double e = 0;
+		cnt = 0;
 		
 		for (int epoch = 0; epoch < epoch_max; epoch ++) {
 			/*
@@ -172,9 +124,10 @@ public class main_iris_setosa {
 			/*
 			 * get string of data
 			 */
-			String x; 
-			x = (String) listOfSt.get(epoch);
-			//split string
+			String x = (String) listOfSt.get(epoch);
+			/*
+			 * split string
+			 */
 			y = x.split(",");
 			
 			for ( int j = 0; j < 4; j++) {
@@ -187,7 +140,7 @@ public class main_iris_setosa {
 				 */
 				inputs[j].setInput(conv_double);
 			}
-
+			
 			/*
 			 * feeding input from input layer to 1st set of connections
 			 */
@@ -196,7 +149,6 @@ public class main_iris_setosa {
 					c_1[ctr].setInput(inputs[ctr2].getOutput());
 				}
 			}
-
 			/*
 			 * hiddenlayers
 			 */
@@ -208,22 +160,36 @@ public class main_iris_setosa {
 			}
 			
 			/*
-			 * set target and update weights
+			 * set target
 			 */
-			int[] tA = setTarget(x, outputs);
+			int[] tA = setTarget(x);
 			
-			//output layer
+			/*
+			 * output layer
 			//double output = outputs[0].calcOut();
 			
-			/*batch size 5
-			if (epoch % 5 == 0 && epoch ) {
-				//traning (backpropagation), every 10th epoch
-				outputs[0].update_w(target, output);
-				hl2[0].update_w();
-				hl1[0].update_w();	
-				System.out.print("update " + epoch + " ");
+			/*
+			 * batch size 5
+			 
+			for (int i = 0; i < outputs.length; i++) {
+				e_out[cnt][i] = tA[i] - outputs[i].calcOut();
+				error[i] += e_out[cnt][i];
 			}
-			*/
+			cnt ++;
+			if (cnt == 5) {
+				System.out.println("*******************************");
+				for(int i = 0; i < error.length; i++) {
+					error[i] = error[i] / batch_size;
+				}
+				cnt = 0;
+				/*
+				 * update weights???
+				 * how do you use this, if the target varies then how to you update the wieghts for 5 epochs if they have different targets ?? 
+				 
+				for(int i = 0; i < outputs.length; i++) {
+					outputs[i].update_w( error[i]);
+				}
+			}
 			/*Print
 			 * Target for: on_ 0 , on_1 , on_2
 			 * Output for: on_ 0 , on_1 , on_2
@@ -237,65 +203,52 @@ public class main_iris_setosa {
 			
 			/*Online traning, fejl
 			 * Remember! target should be set based on output neuron e.g [0 0 1] 
-			outputs[0].update_w(target, output);
-			hl2[0].update_w();
-			hl1[0].update_w();	
-			*/
-			
-			/*soft max layer
-			 * create class, soft max
-			 * output neurons as inputs
-			 * outputs procentage value for each, sum = 1
 			 */
+			for (int i = 0; i < outputs.length; i++) {
+				outputs[i].update_w(tA[i], outputs[i].calcOut());
+			}
+			for (int i = 0; i < hl1.length; i++) {
+				/*
+				 * fucket update_w 
+				 */
+				hl2[i].update_w();
+				hl1[i].update_w();
+			}
+
+	
 			
-		}	
+			double sm[] = softMax.getSoftMax(outputs);
+			for (int i = 0; i < outputs.length; i++) {
+				System.out.print(sm[i] + " ");
+			}
+			System.out.println("");
+		}
+		/*
+		System.out.println(Arrays.deepToString(e_out));
+		System.out.println(Arrays.toString(error));
+		*/
 	}
 	/*
 	 * setting targets
 	 */
-	public static int[] setTarget(String x, neuron_output[] outputs) {
-		/*
-		 * only used for print
-		 */
+	public static int[] setTarget(String x) {
 		int target_array[] = new int[3];
 		if (x.contains("Iris-setosa")) {
-			outputs[0].update_w(1, outputs[0].calcOut());
-			outputs[1].update_w(0, outputs[1].calcOut());
-			outputs[2].update_w(0, outputs[2].calcOut());
-			/*
-			 * only used for print
-			 */
 			target_array[0] = 1;
 			target_array[1] = 0;
 			target_array[2] = 0;
 		} 
 		else if (x.contains("Iris-versicolor")) {
-			outputs[0].update_w(0, outputs[0].calcOut());
-			outputs[1].update_w(1, outputs[1].calcOut());
-			outputs[2].update_w(0, outputs[2].calcOut());
-			/*
-			 * only used for print
-			 */
 			target_array[0] = 0;
 			target_array[1] = 1;
 			target_array[2] = 0;
 		} 
 		else if (x.contains("Iris-virginica")) {
-			outputs[0].update_w(0, outputs[0].calcOut());
-			outputs[1].update_w(0, outputs[1].calcOut());
-			outputs[2].update_w(1, outputs[2].calcOut());
-			/*
-			 * only used for print
-			 */
 			target_array[0] = 0;
 			target_array[1] = 0;
 			target_array[2] = 1;
 		}
-		/*
-		 * only used for print
-		 */
 		return target_array;
-		
 	}
 	
 	/*
@@ -331,11 +284,67 @@ public class main_iris_setosa {
 		}
 		return outputs;
 	}
-	
-	/*
-	 * creating connections
-	 */
-	public static void createInputConnections(int size) {
-		
+	public static connection[] connectionsInputToFirstHiddenLayer(Random r, neuron_input[] inputs, neuron[] hl1, double rangeMin, double rangeMax, double n) {
+		int cnt = 0;
+		/*
+		 * create input connections for hl1
+		 */
+		connection[] c_1 = new connection[inputs.length * hl1.length];
+		for ( int i = 0; i < inputs.length; i++) {
+			for ( int j = 0; j < hl1.length; j++) {
+				/*
+				 * create connection
+				 */
+				c_1[cnt] = new connection(rangeMin + (rangeMax - rangeMin) * r.nextDouble(), n);
+				/*
+				 * add input conection "j" to neuron "i", ammount of connections pr neuron = amount of neurons in previous layer
+				 */
+				hl1[i].addInputConnection(c_1[cnt]);
+				cnt ++;
+			}
+		}
+		return c_1;
+	}
+	public static connection[] connectionsHiddenLayer(Random r, neuron[] hl1, neuron[] hl2, double rangeMin, double rangeMax, double n) {
+		int cnt = 0;
+		/*
+		 * create input connections for hiddenlayers
+		 */	
+		connection[] c = new connection[hl1.length * hl2.length];
+		for ( int i = 0; i < hl1.length; i++) {
+			for ( int j = 0; j < hl2.length; j++) {
+				/*
+				 * create connection
+				 */
+				c[cnt] = new connection(rangeMin + (rangeMax - rangeMin) * r.nextDouble(), n);
+				/*
+				 * add input conection "j" to neuron "i", ammount of connections pr neuron = amount of neurons in previous layer
+				 */
+				hl2[i].addInputConnection(c[cnt]);
+			}
+			cnt ++;
+		}
+		return c;
+	}
+	public static connection[] connectionsHiddenLayerToOutput (Random r, neuron[] hl2, neuron_output[] outputs, double rangeMin, double rangeMax, double n) {
+		int cnt = 0;
+		/*
+		 * create input connections for output layer
+		 */	
+		connection[] c = new connection[hl2.length * outputs.length];
+		for ( int i = 0; i < outputs.length; i++) {
+			for ( int j = 0; j < hl2.length; j++) {
+				/*
+				 * create connection
+				 */
+				c[cnt] = new connection(rangeMin + (rangeMax - rangeMin) * r.nextDouble(), n);
+				/*
+				 * add input conection "j" to neuron "i", ammount of connections pr neuron = amount of neurons in previous layer
+				 */
+				outputs[i].addConnection(c[cnt]);
+			}
+			cnt ++;
+		}
+		return c;
 	}
 }

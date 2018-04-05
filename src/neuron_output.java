@@ -9,7 +9,6 @@ public class neuron_output {
 	int index;
 	double bias;
 	double z;
-	//
 	static double delta;
 	
 	//Array of connections

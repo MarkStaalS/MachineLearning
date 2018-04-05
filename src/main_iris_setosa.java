@@ -72,8 +72,8 @@ public class main_iris_setosa {
 		 * set output connections for hl2
 		 */
 		cnt = 0;
-		for ( int i = 0; i < outputs.length; i++) {
-			for ( int j = 0; j < hl2.length; j++) {
+		for ( int i = 0; i < hl2.length; i++) {
+			for ( int j = 0; j < outputs.length; j++) {
 				/*
 				 * add output conection "j" to neuron "i", ammount of connections pr neuron = amount of neurons in previous layer
 				 */
@@ -88,7 +88,7 @@ public class main_iris_setosa {
 		/*
 		 * Our traning set has 150 lines of data
 		 */
-		int epoch_max = 50;
+		int epoch_max = 0;
 		/*
 		 * Read data
 		 *Loads txt file
@@ -105,7 +105,7 @@ public class main_iris_setosa {
 		}
 		String [] y = new String[4];
 		
-		int batch_size = 5;
+		int batch_size = 2;
 		double[][] e_out = new double[batch_size][outputs.length];
 		double[] error = new double[outputs.length];
 		double e = 0;
@@ -152,10 +152,10 @@ public class main_iris_setosa {
 			/*
 			 * hiddenlayers
 			 */
-			for (int ctr = 0; ctr < hl1.length; ctr++) {
+			for (int ctr = 0; ctr < hl1[0].outputConnections.size(); ctr++) {
 				hl1[ctr].calcOut();
 			}
-			for (int ctr = 0; ctr < hl2.length; ctr++) {
+			for (int ctr = 0; ctr < hl2[0].outputConnections.size(); ctr++) {
 				hl2[ctr].calcOut();
 			}
 			
@@ -199,27 +199,32 @@ public class main_iris_setosa {
 			System.out.println("\t" + tA[0] + "\t" + tA[1] + "\t" + tA[2]);
 			System.out.println("\t on_0" + "\t on_1" + "\t on_2" );
 			System.out.println("\t" + outputs[0].calcOut() + "\t" + outputs[1].calcOut() + "\t" + outputs[2].calcOut());
-
 			
-			/*Online traning, fejl
-			 * Remember! target should be set based on output neuron e.g [0 0 1] 
-			 */
+			
 			for (int i = 0; i < outputs.length; i++) {
 				outputs[i].update_w(tA[i], outputs[i].calcOut());
 			}
+			
+			
 			for (int i = 0; i < hl1.length; i++) {
-				/*
-				 * fucket update_w 
-				 */
-				hl2[i].update_w();
 				hl1[i].update_w();
 			}
-
-	
+			/*
+			 * problem hvad skal der gøres ved update når der ikke er lige mange in og out
+			 */
+			//System.out.println(hl2[0].inputConnections.size());
+			//System.out.println(hl2[3].outputConnections.get(0).delta);
+			//System.out.println(hl1[0].inputConnections.size());
+			//System.out.println(hl1[3].outputConnections.get(0).delta);
+			hl2[3].update_w();
+			
+			for (int i = 0; i < hl2[0].inputConnections.size(); i++) {
+				//hl2[i].update_w();	
+			}
 			
 			double sm[] = softMax.getSoftMax(outputs);
 			for (int i = 0; i < outputs.length; i++) {
-				System.out.print(sm[i] + " ");
+				System.out.print("Sm: " + sm[i] + " ");
 			}
 			System.out.println("");
 		}

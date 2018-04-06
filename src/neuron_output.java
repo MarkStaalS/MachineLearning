@@ -9,7 +9,7 @@ public class neuron_output {
 	int index;
 	double bias;
 	double z;
-	static double delta;
+	double delta;
 	
 	//Array of connections
 	HashMap<Integer, connection> connections = new HashMap<Integer, connection>();

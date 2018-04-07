@@ -43,12 +43,13 @@ public class neuron_output {
 		connections.put(connections.size(), c);
 	}
 	
-	public void update_w(double target, double y) {
-		//loops through connections
+	public void update_w(double target) {
+		//TODO loops through connections
 		for (int i = 0; i < connections.size(); i++) {
-			delta = (target - y) * connections.get(i).x;
+			delta = (target - z) * this.activationFunc(z) + bias;
 			connections.get(i).setDelta(delta);
 			connections.get(i).update_w();
+			//System.out.println("delta: " + delta + "\tz " + z);
 		}
 	}
 }

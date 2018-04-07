@@ -49,9 +49,12 @@ public class neuron {
 	}
 	
 	public void update_w() {
-		//loops through connections
+		//TODO loops through connections 
 		for (int i = 0; i < inputConnections.size(); i++) {
-			double delta = inputConnections.get(i).w * outputConnections.get(0).delta * inputConnections.get(i).x;
+			double sum = 0;
+			for (int j = 0; j < outputConnections.size(); j++)
+				sum += outputConnections.get(j).w + outputConnections.get(j).delta;
+			double delta = sum * this.activationFunc(z) + bias;
 			inputConnections.get(i).setDelta(delta);
 			inputConnections.get(i).update_w();
 		}

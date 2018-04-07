@@ -51,7 +51,9 @@ public class main_iris_setosa {
 		Random r = new Random();
 		double rangeMin = -5;
 		double rangeMax = 5;
-				
+		/*
+		 * connect input layer and first hidden layer
+		 */
 		int ctr = 0;
 		int ctr2 = 0;
 		connection[] c_1 = new connection[inputs.length * hl1.length];
@@ -78,6 +80,7 @@ public class main_iris_setosa {
 				outputs[ctr2].addConnection(c_3[ctr]);
 				hl2[i].addOutputConnection(c_3[ctr]);
 				ctr ++;
+				ctr2 ++;
 			}
 		}
 		/*
@@ -111,7 +114,7 @@ public class main_iris_setosa {
 		/*
 		 * Our traning set has 150 lines of data
 		 */
-		int epoch_max = 1;
+		int epoch_max = 10;
 		/*
 		 * Read data
 		 *Loads txt file

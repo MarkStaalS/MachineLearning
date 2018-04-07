@@ -16,7 +16,6 @@ public class neuron_output {
 	
 	public neuron_output(double _bias) {
 		bias = _bias;
-		index = 0;
 		z = 0;
 	}
 	
@@ -41,8 +40,7 @@ public class neuron_output {
 	
 	public void addConnection(connection c) {
 		//add a connection at index
-		connections.put(index, c);
-		index += 1;
+		connections.put(connections.size(), c);
 	}
 	
 	public void update_w(double target, double y) {

@@ -40,11 +40,13 @@ public class main_iris_setosa {
 		double n = 0.2;
 		/*
 		 * create layers
+		 * TODO neurons updated, now we only have one type
+		 * TODO modyfying and testing new network 
 		 */
 		neuron_input[] inputs = createInputLayer(4);
 		neuron[] hl1 = createHiddenLayer(4);
 		neuron[] hl2 = createHiddenLayer(4);
-		neuron_output[] outputs = createOutputLayer(3);
+		neuron[] outputs = createHiddenLayer(3);
 		/*
 		 * establish connections:
 		 */
@@ -64,7 +66,7 @@ public class main_iris_setosa {
 		}
 
 		/*
-		 * connect final layer and output layer
+		 * TODO connect final layer and output layer
 		 */
 		ctr = 0;
 		connection[] c_3 = new connection[hl2.length * outputs.length];
@@ -238,6 +240,7 @@ public class main_iris_setosa {
 			//System.out.println("\t on_0" + "\t on_1" + "\t on_2" );
 			//System.out.println("\t" + outputs[0].calcOut() + "\t" + outputs[1].calcOut() + "\t" + outputs[2].calcOut());
 			
+			//TODO 
 			double sm[] = softMax.getSoftMax(outputs);
 			for (int i = 0; i < outputs.length; i++) {
 				System.out.printf("\t%.3f",sm[i]);
@@ -250,15 +253,15 @@ public class main_iris_setosa {
 			/* 
 			 * update weights
 			 */
-			for (int i = 0; i < outputs.length; i++) {
-				outputs[i].update_w(tA[i]);
-			}
-			for (int i = 0; i < hl2.length; i++) {
-				hl2[i].update_w();
-			}
-			for (int i = 0; i < hl1.length; i++) {
-				hl1[i].update_w();
-			}
+			/*
+			 * backPropagation
+			 * Output layer error / cost
+			 */
+			/*
+			 * Calc hiddenlayer cost
+			 */
+			
+			
 		}
 		/*
 		System.out.println(Arrays.deepToString(e_out));
@@ -308,5 +311,4 @@ public class main_iris_setosa {
 			outputs[i] = new neuron_output(0);
 		return outputs;
 	}
-	
 }

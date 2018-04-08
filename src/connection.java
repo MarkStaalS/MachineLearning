@@ -42,6 +42,7 @@ public class connection {
 		return z;
 	}
 	
+	/*
 	//updates the weight
 	public void update_w() {
 		double delta_w = n * delta * x;
@@ -49,4 +50,5 @@ public class connection {
 		w = w + delta_w;
 		System.out.printf("\t%f", w);
 	}
+	*/
 }

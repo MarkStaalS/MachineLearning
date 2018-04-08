@@ -10,6 +10,7 @@ public class neuron_output {
 	double bias;
 	double z;
 	double delta;
+	double errorFactor;
 	
 	//Array of connections
 	HashMap<Integer, connection> connections = new HashMap<Integer, connection>();
@@ -43,7 +44,21 @@ public class neuron_output {
 		connections.put(connections.size(), c);
 	}
 	
-	public void update_w(double target) {
+	public double calcError(double target) {
+		double output = calcOut();
+		delta = output * (1 - output) * errorFactor(target, output);
+		return delta;
+	}
+	
+	public double errorFactor(double target, double output) {
+		errorFactor = (target - output);
+		return errorFactor;
+	}
+	
+	/*
+	public void update_w(double target, double output, double n) {
+		
+		delta = - (target - output) * output * (1 - output);
 		//TODO loops through connections
 		for (int i = 0; i < connections.size(); i++) {
 			delta = (target - z) * this.activationFunc(z) + bias;
@@ -51,6 +66,8 @@ public class neuron_output {
 			connections.get(i).update_w();
 			//System.out.println("delta: " + delta + "\tz " + z);
 		}
+		
 	}
+	*/
 }
 

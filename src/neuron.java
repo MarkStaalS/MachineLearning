@@ -6,8 +6,14 @@ public class neuron {
 	double g;
 	double z;
 	double bias;
+	double delta;
+	/*
+	 * source: https://www.codeproject.com/Articles/14342/Designing-And-Implementing-A-Neural-Network-Librar 
+	 */
 	
-	//Array of connections
+	/*
+	 * Array of connections
+	 */
 	HashMap<Integer, connection> inputConnections = new HashMap<Integer, connection>();
 	HashMap<Integer, connection> outputConnections = new HashMap<Integer, connection>();
 	
@@ -18,7 +24,6 @@ public class neuron {
 	}
 	
 	private double activationFunc(double _z) {
-		//activation function
 		if (_z >= 0) {
 			g = _z;
 		} else {
@@ -26,28 +31,106 @@ public class neuron {
 		}	
 		return g;
 	}
-	
-	public void calcOut() {
+	/*
+	 * summs inputs and gives z
+	 */
+	public double calcOut() {
 		z = 0;
-		//sum of the inputs and gives z
 		for (int i = 0; i < inputConnections.size(); i++)
 			z += inputConnections.get(i).getOutput();
-		//loops through outputs and sets their input as calcOut
+		return z;
+	}
+	/*
+	 * hidden layer neuron
+	 */
+	public void calcOutHidden() {
+		z = calcOut();
+		/*
+		 * loops through outputs and sets their input as the result of the activation function
+		 */
 		double out = this.activationFunc(z) + bias;
 		for (int i = 0; i < outputConnections.size(); i++)
 			outputConnections.get(i).setInput(out);
 	}
+	/*
+	 * calc error factor for a fully conected network
+	 */
+	public void calcErrorFactorHidden() {
+		double errorFactor = 0;
+		for (int i = 0; i < outputConnections.size(); i++)
+			errorFactor += outputConnections.get(i).w + outputConnections.get(i).delta;
+		double output = calcOut();
+		delta = output * (1 - output) * errorFactor;
+	}
 	
+	/*
+	 * output layer neuron
+	 * when creating output layer output connections should be omitted
+	 * calc error for output layer
+	 */
+	public void calcErrorOut(double target) {
+		double output = calcOutOut();
+		delta = output * (1 - output) * errorFactorOut(target, output);
+		for (int i = 0; i < inputConnections.size(); i++) {
+			inputConnections.get(i).setDelta(delta);
+		}
+	}
+	
+	private double errorFactorOut(double target, double output) {
+		double errorFactor = (target - output);
+		return errorFactor;
+	}
+	
+	/*
+	 * calcOut for output layer
+	 */
+	public double calcOutOut() {
+		z = 0;
+		//sum of the inputs and gives z
+		for (int i = 0; i <  inputConnections.size(); i++) {
+			z += inputConnections.get(i).getOutput();			
+		}
+		return this.activationFunc(z) + bias;
+	}
+	/*
+	 * input neuron
+	 */
+	public double getOutput() {
+		return z;
+	}
+	public void setInput(double input) {
+		z = input;
+	}
+
+	public void updateFreeParameters(double n) {
+		/*
+		 * update bias
+		 */
+		//bias += n * 1 * delta;
+		/*
+		 * update weight
+		 */
+		double w = 0;
+		for (int i = 0; i < inputConnections.size(); i++) {
+			w = 0;
+			w = inputConnections.get(i).w + n * 1 * inputConnections.get(i).x * delta;
+			inputConnections.get(i).set_w(w);
+		}
+	}
+	
+	/*
+	 * Infrastructure
+	 */
 	public void addInputConnection(connection c) {
-		//add a connection at index
 		inputConnections.put(inputConnections.size(), c);
 	}
 	
 	public void addOutputConnection(connection c) {
-		//add a connection at index
 		outputConnections.put(outputConnections.size(), c);
 	}
 	
+	
+	/*
 	public void update_w() {
 		//TODO loops through connections 
 		for (int i = 0; i < inputConnections.size(); i++) {
@@ -59,5 +142,6 @@ public class neuron {
 			inputConnections.get(i).update_w();
 		}
 	}
+	*/
 }
 

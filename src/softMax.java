@@ -6,7 +6,7 @@ public class softMax {
 		
 	}
 	
-	public static double[] getSoftMax(neuron_output[] outputs) {
+	public static double[] getSoftMax(neuron[] outputs) {
 		/*
 		 * SoftMax layer/ activation function
 		 */

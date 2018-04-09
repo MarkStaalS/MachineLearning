@@ -38,6 +38,7 @@ public class neuron {
 		z = 0;
 		for (int i = 0; i < inputConnections.size(); i++)
 			z += inputConnections.get(i).getOutput();
+		z = this.activationFunc(z) + bias;
 		return z;
 	}
 	/*
@@ -48,7 +49,7 @@ public class neuron {
 		/*
 		 * loops through outputs and sets their input as the result of the activation function
 		 */
-		double out = this.activationFunc(z) + bias;
+		double out = z; 
 		for (int i = 0; i < outputConnections.size(); i++)
 			outputConnections.get(i).setInput(out);
 	}
@@ -58,7 +59,7 @@ public class neuron {
 	public void calcErrorFactorHidden() {
 		double errorFactor = 0;
 		for (int i = 0; i < outputConnections.size(); i++)
-			errorFactor += outputConnections.get(i).w + outputConnections.get(i).delta;
+			errorFactor = errorFactor + (outputConnections.get(i).delta + outputConnections.get(i).w);
 		double output = calcOut();
 		delta = output * (1 - output) * errorFactor;
 	}
@@ -69,7 +70,7 @@ public class neuron {
 	 * calc error for output layer
 	 */
 	public void calcErrorOut(double target) {
-		double output = calcOutOut();
+		double output = calcOut();
 		delta = output * (1 - output) * errorFactorOut(target, output);
 		for (int i = 0; i < inputConnections.size(); i++) {
 			inputConnections.get(i).setDelta(delta);
@@ -77,43 +78,32 @@ public class neuron {
 	}
 	
 	private double errorFactorOut(double target, double output) {
-		double errorFactor = (target - output);
+		double errorFactor = target - output;
 		return errorFactor;
 	}
 	
-	/*
-	 * calcOut for output layer
-	 */
-	public double calcOutOut() {
-		z = 0;
-		//sum of the inputs and gives z
-		for (int i = 0; i <  inputConnections.size(); i++) {
-			z += inputConnections.get(i).getOutput();			
-		}
-		return this.activationFunc(z) + bias;
-	}
 	/*
 	 * input neuron
 	 */
 	public double getOutput() {
 		return z;
 	}
-	public void setInput(double input) {
-		z = input;
+	public void setInput(double _input) {
+		z = _input;
 	}
 
 	public void updateFreeParameters(double n) {
 		/*
 		 * update bias
 		 */
-		//bias += n * 1 * delta;
+		bias += n * 1 * delta;
 		/*
 		 * update weight
 		 */
 		double w = 0;
 		for (int i = 0; i < inputConnections.size(); i++) {
 			w = 0;
-			w = inputConnections.get(i).w + n * 1 * inputConnections.get(i).x * delta;
+			w = inputConnections.get(i).w + n * 1 * calcOut() * delta;
 			inputConnections.get(i).set_w(w);
 		}
 	}

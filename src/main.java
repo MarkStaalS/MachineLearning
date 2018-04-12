@@ -2,7 +2,10 @@ package src;
 
 public class main {
 	public static void main(String[] args) {
+		int[] t = {1,2,3};
+		net myNet = new net(t);
 		
+		/*
 		//input layer
 		neuron_input in0 = new neuron_input();
 		neuron_input in1 = new neuron_input();

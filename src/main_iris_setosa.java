@@ -37,7 +37,7 @@ public class main_iris_setosa {
 		/*
 		 * learning rate
 		 */
-		double n = 0.5;
+		double n = 0.2;
 		double rangeMin = 0;
 		double rangeMax = 1;
 		Random r = new Random();
@@ -47,10 +47,10 @@ public class main_iris_setosa {
 		 * TODO modyfying and testing new network 
 		 * TODO weight decay
 		 */
-		neuron[] inputs = createNeuronLayer(4, 0);
-		neuron[] hl1 = createNeuronLayer(4, 0);
-		neuron[] hl2 = createNeuronLayer(4, 0);
-		neuron[] outputs = createNeuronLayer(3, 0);
+		neuron[] inputs = createNeuronLayer(4, (rangeMin + (rangeMax - rangeMin) * r.nextDouble()));
+		neuron[] hl1 = createNeuronLayer(6, (rangeMin + (rangeMax - rangeMin) * r.nextDouble()));
+		neuron[] hl2 = createNeuronLayer(8, (rangeMin + (rangeMax - rangeMin) * r.nextDouble()));
+		neuron[] outputs = createNeuronLayer(3, (rangeMin + (rangeMax - rangeMin) * r.nextDouble()));
 		
 		int[] topology = {4,4,4,4};
 		/*
@@ -157,7 +157,7 @@ public class main_iris_setosa {
 		int cnt = 0;
 		int stCnt = 0;	
 		
-		int epoch_max = 100;
+		int epoch_max = 1000;
 		for (int epoch = 0; epoch < epoch_max; epoch++, stCnt++) {
 			/*
 			 * Segmentation of data

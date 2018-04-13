@@ -24,7 +24,7 @@ public class neuron {
 		/*
 		 * sigmoid 
 		 */
-		return (1 / (1 + Math.exp( - z)));
+		return (1 / (1 + Math.exp(- z)));
 	}
 	/*
 	 * summation unit
@@ -121,20 +121,5 @@ public class neuron {
 	public void setBias(double _bias) {
 		bias = _bias;
 	}
-	
-	
-	/*
-	public void update_w() {
-		//TODO loops through connections 
-		for (int i = 0; i < inputConnections.size(); i++) {
-			double sum = 0;
-			for (int j = 0; j < outputConnections.size(); j++)
-				sum += outputConnections.get(j).w + outputConnections.get(j).delta;
-			double delta = sum * this.activationFunc(z) + bias;
-			inputConnections.get(i).setDelta(delta);
-			inputConnections.get(i).update_w();
-		}
-	}
-	*/
 }
 

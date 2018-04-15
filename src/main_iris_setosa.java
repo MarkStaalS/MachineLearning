@@ -41,18 +41,22 @@ public class main_iris_setosa {
 		double rangeMin = 0;
 		double rangeMax = 1;
 		Random r = new Random();
+		int batchSize = 1; // get oof my stream NORMIES REEEEEEE!!!!!!
+		int epoch_max = 1000;
 		/*
 		 * create layers
 		 * TODO neurons updated, now we only have one type
 		 * TODO modyfying and testing new network 
 		 * TODO weight decay
 		 */
-		neuron[] inputs = createNeuronLayer(4, (rangeMin + (rangeMax - rangeMin) * r.nextDouble()));
-		neuron[] hl1 = createNeuronLayer(6, (rangeMin + (rangeMax - rangeMin) * r.nextDouble()));
-		neuron[] hl2 = createNeuronLayer(8, (rangeMin + (rangeMax - rangeMin) * r.nextDouble()));
-		neuron[] outputs = createNeuronLayer(3, (rangeMin + (rangeMax - rangeMin) * r.nextDouble()));
+		int[] topology = {4,10,10,3};
 		
-		int[] topology = {4,4,4,4};
+		neuron[] inputs  = createNeuronLayer(topology[0], (rangeMin + (rangeMax - rangeMin) * r.nextDouble()), topology[0]);
+		neuron[] hl1 	 = createNeuronLayer(topology[1], (rangeMin + (rangeMax - rangeMin) * r.nextDouble()), topology[0] * topology[1]);
+		neuron[] hl2 	 = createNeuronLayer(topology[2], (rangeMin + (rangeMax - rangeMin) * r.nextDouble()), topology[1] * topology[2]);
+		neuron[] outputs = createNeuronLayer(topology[3], (rangeMin + (rangeMax - rangeMin) * r.nextDouble()), topology[2] * topology[3]);
+		
+		
 		/*
 		 * establish connections:
 		 */
@@ -133,7 +137,7 @@ public class main_iris_setosa {
 		String [] y = new String[4];
 		/*
 		 * normalize; find min and max
-		 */
+		 *
 		norm norm = new norm();
 		double[][] rMinMax = norm.setupNorm(listOfSt);
 		double[] min = new double[4];
@@ -147,7 +151,7 @@ public class main_iris_setosa {
 		/*
 		 *Shufling data set 
 		 */
-		Collections.shuffle(listOfSt);
+		//Collections.shuffle(listOfSt);
 		/*
 		int batch_size = 5;
 		double[][] e_out = new double[batch_size][outputs.length];
@@ -156,9 +160,7 @@ public class main_iris_setosa {
 		*/
 		int cnt = 0;
 		int stCnt = 0;	
-		
-		int epoch_max = 1000;
-		for (int epoch = 0; epoch < epoch_max; epoch++, stCnt++) {
+		for (int epoch = 1; epoch <= epoch_max; epoch++, stCnt++) {
 			/*
 			 * Segmentation of data
 			 * 0-49   = Setosa
@@ -191,7 +193,7 @@ public class main_iris_setosa {
 				/*
 				 * normalize data
 				 */
-				conv_double = (conv_double - min[j]) / (max[j] - min[j]);
+				//conv_double = (conv_double - min[j]) / (max[j] - min[j]);
 				/*
 				 * set input from 0 to 3 (0,1,2,3)
 				 */
@@ -248,6 +250,7 @@ public class main_iris_setosa {
 			/*
 			 * Calc hiddenlayer cost
 			 */
+			
 			for (int i = 0; i < outputs.length; i++) {
 				outputs[i].calcErrorOut(tA[i]);
 				outputs[i].updateFreeParameters(n);
@@ -260,13 +263,97 @@ public class main_iris_setosa {
 				hl1[i].calcErrorFactorHidden();
 				hl1[i].updateFreeParameters(n);
 			}
+			if (epoch % batchSize == 0) {
+				for (int i = 0; i < outputs.length; i++)
+					outputs[i].updateW(epoch);
+				for (int i = 0; i < hl2.length; i++)
+					hl2[i].updateW(epoch);
+				for (int i = 0; i < hl1.length; i++)
+					hl1[i].updateW(epoch);
+			}
 			
 		}
-		/*
-		System.out.println(Arrays.deepToString(e_out));
-		System.out.println(Arrays.toString(error));
-		*/
+		
+		int error = 0;
+		for (int k = 0; k < listOfSt.size(); k++) {
+			/*
+			 * Segmentation of data
+			 * 0-49   = Setosa
+			 * 50-99  = Versicolor
+			 * 100-149 = Virginica
+			 * Missing augmentation
+			 */	
+			/*
+			 * get string of data
+			 */
+			String x = (String) listOfSt.get(k);
+			/*
+			 * split string
+			 */
+			y = x.split(",");
+			
+			for ( int j = 0; j < 4; j++) {
+				/*
+				 * convert from string to double
+				 */
+				double conv_double = Double.parseDouble(y[j]);
+				/*
+				 * normalize data
+				 */
+				//conv_double = (conv_double - min[j]) / (max[j] - min[j]);
+				/*
+				 * set input from 0 to 3 (0,1,2,3)
+				 */
+				inputs[j].setInput(conv_double);
+				//System.out.print("inp " + conv_double + " ");
+			}
+			
+			/*
+			 * feeding input from input layer to 1st set of connections
+			 */
+			for (int i = 0; i < c_1.length; i++) {
+				for (int j = 0; j < inputs.length; j++) {
+					c_1[i].setInput(inputs[j].getOutput());
+				}
+			}
+			/*
+			 * hiddenlayers calc out
+			 */
+			for (int i = 0; i < hl1.length; i++) 
+				hl1[i].feedForward();
+			
+			for (int i = 0; i < hl2.length; i++) 
+				hl2[i].feedForward();
+			
+			double[] op = new double[outputs.length];
+			for (int i = 0; i < outputs.length; i++) 
+				op[i] = outputs[i].calcOut();
+			/*
+			 * set target
+			 */
+			double[] tA = setTarget(x);
+			double sm[] = softMax.getSoftMax(outputs);
+
+			if(findMax(tA) != findMax(op))
+				error++;
+				
+			
+		}
+		double success = 1 - (error / 150.0) ;
+		System.out.println("\n\nSuccess rate:");
+		System.out.println(success);
+		System.out.println("\n error: " + error);
+		System.out.println( listOfSt.size());
 	}
+	
+	public static int findMax(double[] array) {
+		int maxAt = 0;
+		for (int i = 0; i < array.length; i++) {
+		    maxAt = array[i] > array[maxAt] ? i : maxAt;
+		}
+		return maxAt;
+	}
+	
 	
 	public static double[] setTarget(String x) {
 		double target_array[] = new double[3];
@@ -288,10 +375,10 @@ public class main_iris_setosa {
 		return target_array;
 	}
 
-	public static neuron[] createNeuronLayer(int size, double bias) {
+	public static neuron[] createNeuronLayer(int size, double bias, int InputConnectionSize) {
 		neuron[] l = new neuron[size];
 		for (int i = 0; i < size; i++) {
-			l[i] = new neuron();
+			l[i] = new neuron(InputConnectionSize);
 			l[i].setBias(0);
 		}
 		return l;

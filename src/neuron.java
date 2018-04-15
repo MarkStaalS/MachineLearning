@@ -1,12 +1,14 @@
 package src;
 
 import java.util.HashMap;
+import java.util.Vector;
 
 public class neuron {
 	double g;
 	double z;
 	double bias;
 	double delta;
+	Vector<Double> batchWeights = new Vector<>();
 	/*
 	 * source: https://www.codeproject.com/Articles/14342/Designing-And-Implementing-A-Neural-Network-Librar 
 	 */
@@ -15,9 +17,12 @@ public class neuron {
 	HashMap<Integer, connection> outputConnections = new HashMap<Integer, connection>();
 	
 	
-	public neuron() {
+	public neuron(int InputConnectionSize) {
 		bias = 0;
 		z = 0;
+		batchWeights.setSize(InputConnectionSize);
+		for (int i = 0; i < batchWeights.size(); i++) 
+			batchWeights.set(i, 0.0);
 	}
 	
 	private double activationFunc(double _z) {
@@ -75,25 +80,27 @@ public class neuron {
 	}
 	
 	private double errorFactorOut(double target, double output) {
-		double errorFactor = 0;
-		errorFactor = target - output;
-		return errorFactor;
+		return target - output;
 	}
-	
-	
+
 	public void updateFreeParameters(double n) {
 		/*
 		 * update bias
 		 */
-		bias += n * 1 * delta;
+		//bias += n * 1 * delta;
 		/*
 		 * update weight
 		 */
-		double w = 0;
 		for (int i = 0; i < inputConnections.size(); i++) {
-			w = 0;
-			w = inputConnections.get(i).w + n * 1 * calcOut() * delta;
-			inputConnections.get(i).set_w(w);
+			double w = n * 1 * calcOut() * delta;
+			batchWeights.set(i, batchWeights.get(i) + w);
+		}
+	}
+	
+	public void updateW(int epochs) {
+		for (int i = 0; i < inputConnections.size(); i++) {
+			inputConnections.get(i).set_w(batchWeights.get(i));
+			batchWeights.set(i, 0.0);
 		}
 	}
 	
